@@ -7,6 +7,8 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import zerobase.weatherprojectstudy.domain.Diary;
 import zerobase.weatherprojectstudy.repository.DiaryRepository;
 
@@ -14,7 +16,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class DiaryService {
 
@@ -29,6 +31,8 @@ public class DiaryService {
     @Value("${openweathermap.key}")
     private String apiKey;
 
+
+    @Transactional(readOnly = false)
     public void createDiary(LocalDate date, String text){
         //open weather map에서 날씨 데이터 가져옴
         String weatherData = getWeatherString();
@@ -48,7 +52,8 @@ public class DiaryService {
         return diaryRepository.findAllByDateBetween(startDate, endDate);
     }
 
-    private void saveDiary(LocalDate date, String text, Map<String, Object> parsedWeather) {
+    @Transactional(readOnly = false)
+    public void saveDiary(LocalDate date, String text, Map<String, Object> parsedWeather) {
         Diary nowDiary = Diary.builder()
                 .weather(parsedWeather.get("main").toString())
                 .icon(parsedWeather.get("icon").toString())
@@ -59,6 +64,7 @@ public class DiaryService {
         diaryRepository.save(nowDiary);
     }
 
+    @Transactional(readOnly = false)
     public void updateDiary(LocalDate date, String text) {
         // 날짜중 첫번째 일기를 수정하는 것이라 가정해보자
         Diary firstByDate = diaryRepository.getFirstByDate(date);
@@ -68,6 +74,7 @@ public class DiaryService {
         diaryRepository.save(firstByDate);
     }
 
+    @Transactional(readOnly = false)
     public void deleteDiary(LocalDate date){
         diaryRepository.deleteAllByDate(date);
     }

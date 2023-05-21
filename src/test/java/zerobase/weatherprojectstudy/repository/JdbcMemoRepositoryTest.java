@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
-@Transactional // 이를 붙이지 않으면 테스트 코드 실행하면 데이터가 들어감
+@Transactional // 다 rollback 처리
 class JdbcMemoRepositoryTest {
 
     @Autowired

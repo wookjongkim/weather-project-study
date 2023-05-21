@@ -16,6 +16,6 @@ public interface DiaryRepository extends JpaRepository<Diary, Integer> {
 
     Diary getFirstByDate(LocalDate date);
 
-    @Transactional // 여기 Transactional 없으면 데이터가 안지워짐
+    @Transactional // 여기 Transactional 없으면 데이터가 안지워짐, DB에 상태를 변화시키는 메서드
     void deleteAllByDate(LocalDate date);
 }
