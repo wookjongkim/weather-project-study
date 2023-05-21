@@ -21,7 +21,6 @@ public class Diary {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-
     private String weather;
 
     private String icon;
@@ -31,4 +30,11 @@ public class Diary {
     private String text;
 
     private LocalDate date;
+
+    public void setDateWeather(DateWeather dateWeather){
+        this.date = dateWeather.getDate();
+        this.weather = dateWeather.getWeather();
+        this.icon = dateWeather.getIcon();
+        this.temperature = dateWeather.getTemperature();
+    }
 }
