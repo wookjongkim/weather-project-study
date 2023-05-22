@@ -61,7 +61,7 @@ public class DiaryService {
 
 
     @Transactional(readOnly = false)
-    public void createDiary(LocalDate date, String text){
+    public Diary createDiary(LocalDate date, String text){
 //        //open weather map에서 날씨 데이터 가져옴
 //        String weatherData = getWeatherString();
 //
@@ -78,6 +78,8 @@ public class DiaryService {
         diary.setText(text);
         diaryRepository.save(diary);
         logger.info("end to create diary");
+
+        return diary;
     }
 
     private DateWeather getDateWeather(LocalDate date) {
@@ -115,13 +117,14 @@ public class DiaryService {
     }
 
     @Transactional(readOnly = false)
-    public void updateDiary(LocalDate date, String text) {
+    public Diary updateDiary(LocalDate date, String text) {
         // 날짜중 첫번째 일기를 수정하는 것이라 가정해보자
         Diary firstByDate = diaryRepository.getFirstByDate(date);
         firstByDate.setText(text);
 
         // 이 경우엔 Id값을 그대로 둔 후, 덮어씌우게 됨
         diaryRepository.save(firstByDate);
+        return firstByDate;
     }
 
     @Transactional(readOnly = false)
